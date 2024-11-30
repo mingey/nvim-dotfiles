@@ -1,0 +1,3 @@
+return {
+	'davidmh/cspell.nvim',
+}
