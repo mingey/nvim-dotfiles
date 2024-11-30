@@ -1,26 +1,9 @@
+local vim = vim
 vim.opt.compatible = false
+
 
 vim.fn.setenv('TMPDIR', './tmp')
 vim.opt.syntax = 'off'
-
--- set colorscheme
-vim.opt.termguicolors = true
-vim.opt.background = 'dark'
--- commands for specific colorschemes
--- ONEDARK
--- vim.g.onedark_terminal_italics = 1
--- AYU
--- vim.g.ayucolor = 'mirage'
--- vim.g.ayucolor = 'dark'
--- vim.g.ayu_italic_comment = 1
--- vim.g.ayu_sign_contrast = 1
--- vim.g.ayu_extended_palette = 1
--- SONOKAI
--- vim.g.sonokai_style = 'andromeda'
--- vim.g.sonokai_enable_italic = '1'
--- vim.g.sonokai_dim_inactive_windows = '1'
--- vim.g.sonokai_show_eob = '0'
--- vim.cmd [[colorscheme wildcherry]]
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -322,6 +305,77 @@ require("lazy").setup('plugins')
 	},
 }
 
+-- set colorscheme
+vim.opt.termguicolors = true
+vim.opt.background = 'dark'
+-- commands for specific colorschemes
+-- ONEDARK
+-- vim.g.onedark_terminal_italics = 1
+-- AYU
+-- vim.g.ayucolor = 'mirage'
+-- vim.g.ayucolor = 'dark'
+-- vim.g.ayu_italic_comment = 1
+-- vim.g.ayu_sign_contrast = 1
+-- vim.g.ayu_extended_palette = 1
+-- SONOKAI
+-- vim.g.sonokai_style = 'andromeda'
+-- vim.g.sonokai_enable_italic = '1'
+-- vim.g.sonokai_dim_inactive_windows = '1'
+-- vim.g.sonokai_show_eob = '0'
+-- CATPPUCCIN
+require('catppuccin').setup({
+    flavour = 'mocha',      -- latte, frappe, macciato, mocha
+    background = {
+      light = 'latte',
+      dark = 'mocha',
+    },
+    dim_inactive = {
+      enabled = true,
+      shade = 'dark',
+      percentage = 0.15,
+    },
+    default_integrations = true,
+    integrations = {
+      cmp = true,
+      gitsigns = true,
+      nvimtree = false,
+      neotree = true,
+      treesitter = true,
+      notify = false,
+      mini = {
+        enabled = true,
+        indentscope_color = '',
+      },
+      native_lsp = {
+        enabled = true,
+        virtual_text = {
+          errors = { 'italic' },
+          hints = { 'italic' },
+          warnings = { 'italic' },
+          information = { 'italic' },
+          ok = { 'italic' },
+        },
+        underlines = {
+          errors = { 'underline' },
+          hints = { 'underline' },
+          warnings = { 'underline' },
+          information = { 'underline' },
+          ok = { 'underline' },
+        },
+        inlay_hints = {
+          background = true,
+        },
+      },
+      lsp_trouble = false,
+      gitgutter = false,
+      vimwiki = false,
+      which_key = false,
+    },
+})
+
+vim.cmd [[colorscheme catppuccin]]
+
+-- CMP
 local cmp = require'cmp'
 
 cmp.setup({
@@ -372,7 +426,7 @@ cmp.setup({
 		{ name = 'buffer' },
 	})
 })
-require("cmp_git").setup() ]]-- 
+require("cmp_git").setup() ]]--
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ '/', '?' }, {

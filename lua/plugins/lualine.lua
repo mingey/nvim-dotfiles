@@ -4,7 +4,7 @@ return {
 		opts = {
     options = {
       icons_enabled = true,
-      theme = 'onedark',
+      theme = 'catppuccin',
       section_separators = { left = '', right = '' },
       component_separators = { left = '', right = '' },
       disabled_filetypes = {
@@ -13,7 +13,7 @@ return {
       },
       ignore_focus = {},
       always_divide_middle = true,
-  	always_show_tabline = true,
+      always_show_tabline = true,
      globalstatus = false,
       refresh = {
         statusline = 1000,
