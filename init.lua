@@ -25,6 +25,9 @@ vim.opt.rtp:prepend(lazypath)
 require('mapping')
 
 -- OPTIONS
+-- file navigation & handling
+vim.opt.autochdir = true
+
 -- gui
 vim.opt.number = true
 vim.opt.signcolumn = 'auto:2-9'
@@ -33,6 +36,7 @@ vim.opt.cursorline = true
 vim.opt.cursorlineopt = 'number'
 vim.opt.laststatus = 2
 vim.opt.cmdheight = 4
+vim.opt.guicursor = { 'n-v-c:block', 'i-ci-ve:ver25', 'r-cr:hor20', 'o:hor50', 'a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor', 'sm:block-blinkwait175-blinkoff150-blinkon175' }
 
 -- wrapping and indentation
 vim.cmd [[filetype plugin indent on]]
@@ -58,6 +62,7 @@ vim.opt.foldlevel = 1
 -- movement
 vim.opt.backspace = { 'indent', 'eol', 'start' }
 vim.opt.mouse = 'a'
+vim.opt.mousehide = true
 vim.opt.cursorbind = false
 
 -- layout: buffers, windows, and tabs
@@ -172,7 +177,7 @@ require("lazy").setup('plugins')
 		-- install missing plugins on startup. This doesn't increase startup time.
 		missing = true,
 		-- try to load one of these colorschemes when starting an installation during startup
-		colorscheme = { "wildcherry" },
+		colorscheme = { "oxocarbon" },
 	},
 	ui = {
 		-- a number <1 is a percentage., >1 is a fixed size
@@ -323,57 +328,57 @@ vim.opt.background = 'dark'
 -- vim.g.sonokai_dim_inactive_windows = '1'
 -- vim.g.sonokai_show_eob = '0'
 -- CATPPUCCIN
-require('catppuccin').setup({
-    flavour = 'mocha',      -- latte, frappe, macciato, mocha
-    background = {
-      light = 'latte',
-      dark = 'mocha',
-    },
-    dim_inactive = {
-      enabled = true,
-      shade = 'dark',
-      percentage = 0.15,
-    },
-    default_integrations = true,
-    integrations = {
-      cmp = true,
-      gitsigns = true,
-      nvimtree = false,
-      neotree = true,
-      treesitter = true,
-      notify = false,
-      mini = {
-        enabled = true,
-        indentscope_color = '',
-      },
-      native_lsp = {
-        enabled = true,
-        virtual_text = {
-          errors = { 'italic' },
-          hints = { 'italic' },
-          warnings = { 'italic' },
-          information = { 'italic' },
-          ok = { 'italic' },
-        },
-        underlines = {
-          errors = { 'underline' },
-          hints = { 'underline' },
-          warnings = { 'underline' },
-          information = { 'underline' },
-          ok = { 'underline' },
-        },
-        inlay_hints = {
-          background = true,
-        },
-      },
-      lsp_trouble = false,
-      gitgutter = false,
-      vimwiki = false,
-      which_key = false,
-    },
-})
-
-vim.cmd [[colorscheme catppuccin]]
+-- require('catppuccin').setup({
+--     flavour = 'mocha',      -- latte, frappe, macciato, mocha
+--     background = {
+--       light = 'latte',
+--       dark = 'mocha',
+--     },
+--     dim_inactive = {
+--       enabled = true,
+--       shade = 'dark',
+--       percentage = 0.15,
+--     },
+--     default_integrations = true,
+--     integrations = {
+--       cmp = true,
+--       gitsigns = true,
+--       nvimtree = false,
+--       neotree = true,
+--       treesitter = true,
+--       notify = false,
+--       mini = {
+--         enabled = true,
+--         indentscope_color = '',
+--       },
+--       native_lsp = {
+--         enabled = true,
+--         virtual_text = {
+--           errors = { 'italic' },
+--           hints = { 'italic' },
+--           warnings = { 'italic' },
+--           information = { 'italic' },
+--           ok = { 'italic' },
+--         },
+--         underlines = {
+--           errors = { 'underline' },
+--           hints = { 'underline' },
+--           warnings = { 'underline' },
+--           information = { 'underline' },
+--           ok = { 'underline' },
+--         },
+--         inlay_hints = {
+--           background = true,
+--         },
+--       },
+--       lsp_trouble = false,
+--       gitgutter = false,
+--       vimwiki = false,
+--       which_key = false,
+--     },
+-- })
+--
+-- vim.cmd [[colorscheme catppuccin]]
 
 -- CMP
 local cmp = require'cmp'
@@ -452,11 +457,14 @@ require'lspconfig'.vimls.setup {}
 require'lspconfig'.lua_ls.setup {}
 require'lspconfig'.basedpyright.setup{}
 require'lspconfig'.jedi_language_server.setup{}
+require'lspconfig'.jsonnet_ls.setup{}
 require'lspconfig'.jsonls.setup{}
 require'lspconfig'.spectral.setup{}
 require'lspconfig'.yamlls.setup {}
 require'lspconfig'.clangd.setup {}
+require'lspconfig'.lemminx.setup {}
 require'lspconfig'.diagnosticls.setup {}
+require'lspconfig'.taplo.setup {}
 require'lspconfig'.vale_ls.setup {}
 require'lspconfig'.bashls.setup {}
 require'lspconfig'.powershell_es.setup {
@@ -488,3 +496,62 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
 
 -- neomake
 vim.fn['neomake#configure#automake']('rw', 1000)
+
+-- Neovide
+if vim.g.neovide then
+  vim.opt.linespace = 0.2
+  vim.g.neovide_scale_factor = 1.0
+  vim.g.neovide_text_gamma = 0.0
+  vim.g.neovide_text_contrast = 0.8
+  vim.g.neovide_padding_top = 0.5
+  vim.g.neovide_padding_bottom = 0.5
+  vim.g.neovide_padding_right = 0.5
+  vim.g.neovide_padding_left = 0.5
+  vim.g.neovide_transparency = 0.0
+  vim.g.neovide_floating_shadow = true
+  vim.g.neovide_floating_z_height = 10
+  vim.g.neovide_light_angle_degrees = 45
+  vim.g.neovide_light_radius = 5
+  vim.g.neovide_floating_corner_radius = 0.5
+  vim.g.neovide_position_animation_length = 0.05
+  vim.g.neovide_scroll_animation_length = 0.1
+  vim.g.neovide_scroll_animation_far_lines = 999
+  vim.g.neovide_hide_mouse_when_typing = true
+  vim.g.neovide_underline_stroke_scale = 1.0
+  vim.g.neovide_theme = 'dark'
+  vim.g.experimental_layer_grouping = false
+  vim.g.neovide_refresh_rate = 60
+  vim.g.neovide_refresh_rate_idle = 5
+  vim.g.neovide_no_idle = true
+  vim.g.neovide_confirm_quit = true
+  vim.g.neovide_detach_on_quit = 'prompt'
+  vim.g.neovide_fullscreen = true
+  vim.g.neovide_remember_window_size = true
+  vim.g.neovide_profiler = false
+  vim.g.neovide_cursor_animation_length = 0.05
+  vim.g.neovide_cursor_trail_size = 1.5
+  vim.g.neovide_cursor_antialiasing = true
+  vim.g.neovide_cursor_animate_in_insert_mode = true
+  vim.g.neovide_cursor_animate_command_line = true
+  vim.g.neovide_cursor_unfocused_outline_width = 0.025
+  vim.g.neovide_cursor_smooth_blink = true
+  vim.g.neovide_cursor_vfx_mode = 'pixiedust'
+  vim.g.neovide_cursor_vfx_opacity = 200.0
+  vim.g.neovide_cursor_vfx_particle_lifetime = 2.0
+  vim.g.neovide_cursor_vfx_particle_density = 7.0
+  vim.g.neovide_cursor_vfx_particle_speed = 10.0
+end
+
+if vim.g.neovide then
+	-- keybindings to change scale factor on the fly
+	local change_scale_factor = function(delta)
+		vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
+	end
+	vim.keymap.set("n", "<C-=>", function()
+		change_scale_factor(1.25)
+	end)
+	vim.keymap.set("n", "<C-->", function()
+		change_scale_factor(1/1.25)
+	end)
+end
+

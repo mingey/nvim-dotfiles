@@ -4,7 +4,7 @@ return {
 		opts = {
     options = {
       icons_enabled = true,
-      theme = 'catppuccin',
+      theme = 'oxocarbon',
       section_separators = { left = '', right = '' },
       component_separators = { left = '', right = '' },
       disabled_filetypes = {
@@ -25,7 +25,7 @@ return {
       lualine_a = {'searchcount', 'mode', 'selectioncount'},
       lualine_b = {
   			{
-  				'branch'
+          "vim.fn['fugitive#statusline']()",
   			},
   			{
   				'diff'
@@ -37,14 +37,6 @@ return {
           'lsp_progress',
           lsp_progress = function()
             return require('lsp-progress').progress()
-          end,
-          'lint_progress',
-          lint_progress = function()
-            local linters = require("lint").get_running()
-            if #linters == 0 then
-              return "󰦕"
-            end
-            return "󱉶 " .. table.concat(linters, ", ")
           end,
         },
       },
@@ -105,14 +97,15 @@ return {
       },
     inactive_winbar = {},
     extensions = {
-  	'fzf',
-  	'man',
-  	'mason',
-  	'neo-tree',
-  	'nerdtree',
-  	'quickfix',
-  	'symbols-outline',
-  	'trouble',
-  	},
+      'fzf',
+      'fugitive',
+      'man',
+      'mason',
+      'neo-tree',
+      'nerdtree',
+      'quickfix',
+      'symbols-outline',
+      'trouble',
+    },
   },
 }
