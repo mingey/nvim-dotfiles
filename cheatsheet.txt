@@ -1,0 +1,2 @@
+Open help in full screen | :help | only
+Search for help topic | :h <term> <Ctrl-D>
