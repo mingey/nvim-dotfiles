@@ -1,6 +1,9 @@
 local vim = vim
 vim.opt.compatible = false
 
+-- tiny-inline-diagnostic
+-- "to not have all disgnostics in the buffer displayed"
+vim.diagnostic.config({ virtual_text = false })
 
 vim.fn.setenv('TMPDIR', './tmp')
 vim.opt.syntax = 'off'
@@ -26,7 +29,7 @@ require('mapping')
 
 -- OPTIONS
 -- file navigation & handling
-vim.opt.autochdir = true
+vim.opt.autochdir = false
 
 -- gui
 vim.opt.number = true
@@ -37,11 +40,13 @@ vim.opt.cursorlineopt = 'number'
 vim.opt.laststatus = 2
 vim.opt.cmdheight = 4
 vim.opt.guicursor = { 'n-v-c:block', 'i-ci-ve:ver25', 'r-cr:hor20', 'o:hor50', 'a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor', 'sm:block-blinkwait175-blinkoff150-blinkon175' }
+vim.opt.list = true
+vim.opt_global.listchars = 'tab:> ,trail:-,nbsp:+,extends:&,precedes:&'
 
 -- wrapping and indentation
 vim.cmd [[filetype plugin indent on]]
 vim.opt.textwidth = 90
-vim.opt.wrap = true
+vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
@@ -70,7 +75,7 @@ vim.opt.hidden = true					-- required for LSP
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.scrolloff = 5
-vim.opt.sidescrolloff = 5
+vim.opt.sidescrolloff = 999
 
 -- editing
 vim.opt.formatoptions = 'tcqwnjc'
@@ -403,7 +408,7 @@ cmp.setup({
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
 		['<C-Space>'] = cmp.mapping.complete(),
 		['<C-e>'] = cmp.mapping.abort(),
-		['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+		['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
@@ -452,6 +457,15 @@ cmp.setup.cmdline(':', {
 	matching = { disallow_symbol_nonprefix_matching = false }
 })
 
+-- minimize impact of large files
+get_bufnrs = function()
+  local buf = vim.api.nvim_get_current_buf()
+  local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+  if byte_size > 1024 * 1024 then -- 1 Megabyte max
+    return {}
+  end
+  return { buf }
+end
 
 require'lspconfig'.vimls.setup {}
 require'lspconfig'.lua_ls.setup {}
@@ -554,4 +568,23 @@ if vim.g.neovide then
 		change_scale_factor(1/1.25)
 	end)
 end
+
+-- vimwiki
+-- don't treat all md files as vimwiki files
+vim.g.vimwiki_global_ext = 0
+vim.cmd([[
+  let g:vimwiki_key_mappings =
+    \ {
+    \   'all_maps': 1,
+    \   'global': 1,
+    \   'headers': 1,
+    \   'text_objs': 1,
+    \   'table_format': 1,
+    \   'table_mappings': 1,
+    \   'lists': 1,
+    \   'links': 1,
+    \   'html': 1,
+    \   'mouse': 1,
+    \ }
+]])
 
