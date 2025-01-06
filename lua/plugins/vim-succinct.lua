@@ -1,4 +1,0 @@
-return
-{
-  "lukelbd/vim-succinct",
-}

@@ -25,4 +25,35 @@ vim.keymap.set('i', '<down>', '<c-o>gj')
 vim.keymap.set('i', '<up>', '<c-o>gk')
 vim.keymap.set('i', '<home>', '<c-o>g<home>')
 vim.keymap.set('i', '<end>', '<c-o>g<end>')
+-- shuffle the lines of a file
+vim.keymap.set('n', '<Leader>r', ':%!shuf<cr>')
+-- use tabs to navigate through mini.completion list
+local imap_expr = function(lhs, rhs)
+	vim.keymap.set('i', lhs, rhs, { expr = true })
+end
+imap_expr('<Tab>', [[pumvisible() ? "\<C-n>" : "\<Tab>"]])
+imap_expr('<S-Tab>', [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]])
+-- Use <CR> in mini.completion in a more intuitive way
+local keycode = vim.keycode or function(x)
+	return vim.api.nvim_replace_termcodes(x, true, true, true)
+end
+local keys = {
+	['cr'] = keycode('<CR>'),
+	['ctrl-y'] = keycode('<C-y>'),
+	['ctrl-y_cr'] = keycode('<C-y><CR>'),
+}
 
+_G.cr_action = function()
+	if vim.fn.pumvisible() ~= 0 then
+		-- if popup is visible, confirm selected line or add new line otherwise
+		local item_selected = vim.fn.complete_info()['selected'] ~= -1
+		return item_selected and keys['ctrl-y'] or keys['ctrl-y_cr']
+	else
+		-- If popup is not visible, use plain `<CR>`. You might want to customize according to
+		-- other plugins. For example, to use 'mini.pairs', replace next line with `return 
+		-- require('mini.pairs').cr()`
+		return keys['cr']
+	end
+end
+
+vim.keymap.set('i', '<CR>', 'v:lua._G.cr_action()', { expr = true })

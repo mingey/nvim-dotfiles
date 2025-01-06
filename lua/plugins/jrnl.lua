@@ -1,3 +1,0 @@
-return {
-	'wren/jrnl.vim',
-}

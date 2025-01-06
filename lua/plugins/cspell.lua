@@ -1,3 +1,0 @@
-return {
-	'davidmh/cspell.nvim',
-}

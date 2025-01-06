@@ -1,3 +1,0 @@
-return {
-	'lukelbd/vim-toggle',
-}

@@ -1,3 +1,0 @@
-return {
-	'CantoroMC/nvim-nightmare',
-}

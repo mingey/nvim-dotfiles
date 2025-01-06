@@ -1,3 +1,0 @@
-return {
-	'luxed/ayu-vim',
-}
