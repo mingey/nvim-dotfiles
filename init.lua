@@ -22,9 +22,34 @@ require('mini.deps').setup({
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
 -- Safely execute immediately
+
 now(function()
+	add({
+		source = 'catppuccin/nvim',
+		name = 'catppuccin'
+	})
 	vim.o.termguicolors = true
-	vim.cmd('colorscheme minischeme')
+end)
+
+require('catppuccin').setup({
+	flavour = 'mocha',
+	transparent_background = true,
+	dim_inactive = {
+		enabled = false,
+		shade = 'dark',
+		percentage = 0.25,
+	},
+	integrations = {
+		vimwiki = true,
+	}
+})
+
+now(function()
+	vim.cmd.colorscheme 'catppuccin'
+end)
+
+now(function()
+	require('mini.starter').setup()
 end)
 
 now(function()
@@ -34,6 +59,18 @@ end)
 
 now(function()
 	require('mini.icons').setup()
+end)
+
+now(function()
+	require('mini.visits').setup()
+end)
+
+now(function()
+	require('mini.git').setup()
+end)
+
+now(function()
+	require('mini.diff').setup()
 end)
 
 now(function()
@@ -49,6 +86,22 @@ later(function()
 	require('mini.ai').setup({
 		search_method = 'cover_or_nearest',
 	})
+end)
+
+later(function()
+	require('mini.bufremove').setup()
+end)
+
+later(function()
+	require('mini.clue').setup()
+end)
+
+later(function()
+	require('mini.extra').setup()
+end)
+
+later(function()
+	require('mini.files').setup()
 end)
 
 later(function()
@@ -86,6 +139,10 @@ later(function()
 		},
 		set_vim_settings = true,
 	})
+end)
+
+later(function()
+	require('mini.pairs').setup()
 end)
 
 later(function()
@@ -135,7 +192,7 @@ later(function()
 		source = 'nvim-treesitter/nvim-treesitter',
 		-- Use 'master' while monitoring updates in 'main'
 		checkout = 'master',
-		monitor = 'main',
+		-- monitor = 'main',
 		-- Perform action after every checkout
 		hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
 	})
