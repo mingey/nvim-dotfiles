@@ -33,7 +33,7 @@ end)
 
 require('catppuccin').setup({
 	flavour = 'mocha',
-	transparent_background = true,
+	transparent_background = false,
 	dim_inactive = {
 		enabled = false,
 		shade = 'dark',
@@ -49,8 +49,33 @@ now(function()
 end)
 
 now(function()
+	require('mini.sessions').setup({
+		autoread = false,
+		autowrite = false,
+	})
+end)
+
+now(function()
 	require('mini.starter').setup()
 end)
+
+local starter = require('mini.starter')
+starter.setup({
+	autoopen = true,
+	evaluate_single = false,
+	items = {
+		starter.sections.sessions(10, true),
+		starter.sections.recent_files(10, false, false),
+		starter.sections.pick(),
+		starter.sections.telescope(),
+		starter.sections.builtin_actions(),
+	},
+	header = nil,
+	footer = nil,
+	content_hooks = nil,
+	query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_-.',
+	silent = false,
+})
 
 now(function()
 	require('mini.notify').setup()
@@ -78,6 +103,10 @@ now(function()
 end)
 
 now(function()
+	require('mini.test').setup()
+end)
+
+now(function()
 	require('mini.statusline').setup()
 end)
 
@@ -89,7 +118,7 @@ later(function()
 end)
 
 later(function()
-	require('mini.bufremove').setup()
+require('mini.bufremove').setup()
 end)
 
 later(function()
@@ -185,6 +214,25 @@ now(function()
 		source = 'vimwiki/vimwiki',
 	})
 
+	add({
+		source = 'OXY2DEV/helpview.nvim',
+	})
+
+	add({
+		source = 'gregorias/coop.nvim',
+	})
+
+	add({
+		source = 'pysan3/pathlib.nvim',
+})
+
+	add({
+		source = 'nvim-telescope/telescope.nvim',
+		depends = {
+'nvim-lua/plenary.nvim',
+},
+	})
+
 end)
 
 later(function()
@@ -199,7 +247,7 @@ later(function()
 
 	-- Possible to immediately execute code which depends on the added plugin
 	require('nvim-treesitter.configs').setup({
-		ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc' },
+		ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'xml' },
 		highlight = { enable = true },
 	})
 end)
@@ -314,7 +362,7 @@ if vim.g.neovide then
   vim.g.neovide_confirm_quit = true
   vim.g.neovide_detach_on_quit = 'prompt'
   vim.g.neovide_fullscreen = true
-  vim.g.neovide_remember_window_size = true
+vim.g.neovide_remember_window_size = true
   vim.g.neovide_profiler = false
   vim.g.neovide_cursor_animation_length = 0.05
   vim.g.neovide_cursor_trail_size = 1.5
@@ -325,7 +373,7 @@ if vim.g.neovide then
   vim.g.neovide_cursor_smooth_blink = true
   vim.g.neovide_cursor_vfx_mode = 'pixiedust'
   vim.g.neovide_cursor_vfx_opacity = 200.0
-  vim.g.neovide_cursor_vfx_particle_lifetime = 2.0
+vim.g.neovide_cursor_vfx_particle_lifetime = 2.0
   vim.g.neovide_cursor_vfx_particle_density = 7.0
   vim.g.neovide_cursor_vfx_particle_speed = 10.0
 end
@@ -364,7 +412,7 @@ vim.cmd([[
 	\	'html': 1,
 	\	'mouse': 1,
 	\}
-hi VimwikiItalic guifg=#F88379
+hi VimwikiItalic guifg=#F88379 gui=italic
 ]])
 
 -- PLUGINS
@@ -378,6 +426,7 @@ require'lspconfig'.lua_ls.setup({
 				globals = {
 					'vim',
 					'MiniDeps',
+					'MiniStarter',
 				},
 			},
 		},
@@ -386,3 +435,36 @@ require'lspconfig'.lua_ls.setup({
 require'lspconfig'.clangd.setup({
 })
 
+require'lspconfig'.lua_ls.setup {
+	on_init = function(client)
+		if client.workspace_folders then
+			local path = client.workspace_folders[1].name
+			if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
+				return
+			end
+		end
+
+		client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+			runtime = {
+				-- Tell the language server which version of Lua you're using
+				-- (most likely LuaJIT in the case of Neovim)
+				version = 'LuaJIT'
+			},
+			-- Make the server aware of Neovim runtime files
+			workspace = {
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME
+					-- Depending on the usage, you might want to add additional paths here.
+					-- "${3rd}/luv/library"
+					-- "${3rd}/busted/library",
+				}
+				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
+				-- library = vim.api.nvim_get_runtime_file("", true)
+			}
+		})
+	end,
+	settings = {
+		Lua = {}
+	}
+}

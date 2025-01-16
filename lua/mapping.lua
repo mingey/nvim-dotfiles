@@ -57,3 +57,7 @@ _G.cr_action = function()
 end
 
 vim.keymap.set('i', '<CR>', 'v:lua._G.cr_action()', { expr = true })
+-- Telescope shortcuts
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>tt', ':Telescope<CR>', { desc = 'Telescope main menu' })
