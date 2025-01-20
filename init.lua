@@ -14,6 +14,9 @@ end
 
 -- Set up 'mini.deps' (customize to your liking)
 require('mini.deps').setup({
+	job = {
+		timeout = 120000,
+	},
 	path = {
 		package = path_package,
 	},
@@ -45,13 +48,40 @@ require('catppuccin').setup({
 })
 
 now(function()
-	vim.cmd.colorscheme 'catppuccin'
+	add({
+		source = 'Everblush/nvim',
+		name = 'everblush',
+	})
+end)
+
+now(function()
+	add({
+		source = 'tanvirtin/monokai.nvim',
+	})
+end)
+
+require('monokai').setup{}
+require('monokai').setup { palette = require('monokai').pro }
+require('monokai').setup { palette = require('monokai').soda }
+require('monokai').setup { palette = require('monokai').ristretto }
+
+now(function()
+	vim.cmd.colorscheme 'monokai'
 end)
 
 now(function()
 	require('mini.sessions').setup({
 		autoread = false,
 		autowrite = false,
+	})
+end)
+
+now(function()
+	add({
+		source = 'MaximilianLloyd/ascii.nvim',
+		depends = {
+			'MunifTanjim/nui.nvim',
+		},
 	})
 end)
 
@@ -66,11 +96,9 @@ starter.setup({
 	items = {
 		starter.sections.sessions(10, true),
 		starter.sections.recent_files(10, false, false),
-		starter.sections.pick(),
-		starter.sections.telescope(),
 		starter.sections.builtin_actions(),
 	},
-	header = nil,
+	header = table.concat(require('ascii').art.text.neovim.colossal, '\n'),
 	footer = nil,
 	content_hooks = nil,
 	query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_-.',
@@ -107,8 +135,13 @@ now(function()
 end)
 
 now(function()
-	require('mini.statusline').setup()
+	require('mini.statusline').setup({})
 end)
+
+vim.cmd([[
+hi MiniStatuslineModeNormal guifg=#8ccf7e guibg=#141b1e
+hi MiniStatuslineFilename guifg=#ffffbf guibg=#141b1e
+]])
 
 -- Safely execute later
 later(function()
@@ -122,7 +155,72 @@ require('mini.bufremove').setup()
 end)
 
 later(function()
-	require('mini.clue').setup()
+	local miniclue = require('mini.clue')
+	require('mini.clue').setup({
+		triggers = {
+			-- Leader triggers
+			{ mode = 'n', keys = '<Leader>' },
+			{ mode = 'x', keys = '<Leader>' },
+			{ mode = 'n', keys = '<Leader>m' },
+			{ mode = 'x', keys = '<Leader>m' },
+
+			-- Built-in Completion
+			{ mode = 'i', keys = '<C-x>' },
+
+			-- 'g' key
+			{ mode = 'n', keys = 'g' },
+			{ mode = 'x', keys = 'g' },
+
+			-- Marks
+			{ mode = 'n', keys = "'" },
+			{ mode = 'n', keys = "`" },
+			{ mode = 'x', keys = "'" },
+			{ mode = 'x', keys = "`" },
+
+			-- Registers
+			{ mode = 'n', keys = '"' },
+			{ mode = 'x', keys = '"' },
+			{ mode = 'i', keys = '<C-r>' },
+			{ mode = 'c', keys = '<C-r>' },
+
+			-- Window commands
+			{ mode = 'n', keys = '<C-w>' },
+
+			-- 'z' key
+			{ mode = 'n', keys = 'z' },
+			{ mode = 'x', keys = 'z' },
+		},
+
+		clues = {
+			-- Enhance this by adding descriptions for <Leader> mapping groups
+			miniclue.gen_clues.builtin_completion(),
+			miniclue.gen_clues.g(),
+			miniclue.gen_clues.marks(),
+			miniclue.gen_clues.registers(),
+			miniclue.gen_clues.windows({
+				submode_move = true,
+				submode_navigate = true,
+				submode_resize = true,
+			}),
+			miniclue.gen_clues.z(),
+			{ mode = 'n', keys = '<Leader>mh', postkeys = '<Leader>m' },
+			{ mode = 'n', keys = '<Leader>mj', postkeys = '<Leader>m' },
+			{ mode = 'n', keys = '<Leader>mk', postkeys = '<Leader>m' },
+			{ mode = 'n', keys = '<Leader>ml', postkeys = '<Leader>m' },
+			{ mode = 'x', keys = '<Leader>mh', postkeys = '<Leader>m' },
+			{ mode = 'x', keys = '<Leader>mj', postkeys = '<Leader>m' },
+			{ mode = 'x', keys = '<Leader>mk', postkeys = '<Leader>m' },
+			{ mode = 'x', keys = '<Leader>ml', postkeys = '<Leader>m' },
+		},
+
+		window = {
+			delay = 0,
+			config = {
+				width = 'auto',
+				border = 'double',
+			},
+		},
+	})
 end)
 
 later(function()
@@ -167,6 +265,21 @@ later(function()
 			force_fallback = '<A-Space>',
 		},
 		set_vim_settings = true,
+	})
+end)
+
+later(function()
+	require('mini.move').setup({
+		mappings = {
+			left			= '<Leader>mh',
+			right			= '<Leader>ml',
+			down			= '<Leader>mj',
+			up				= '<Leader>mk',
+			line_left	= '<Leader>mh',
+			line_right= '<Leader>ml',
+			line_down	= '<Leader>mj',
+			line_up		= '<Leader>mk',
+		},
 	})
 end)
 
@@ -229,8 +342,28 @@ now(function()
 	add({
 		source = 'nvim-telescope/telescope.nvim',
 		depends = {
-'nvim-lua/plenary.nvim',
-},
+			'nvim-lua/plenary.nvim',
+		},
+	})
+
+	add({
+		source = 'Dan7h3x/LazyDo',
+		checkout = 'main',
+	})
+
+	add({
+		source = 'dustinblackman/oatmeal.nvim',
+	})
+
+	add({
+		source = 'ibhagwan/fzf-lua',
+		depends = {
+			'nvim-tree/nvim-web-devicons',
+		},
+	})
+
+	add({
+		source = 'rktjmp/lush.nvim',
 	})
 
 end)
@@ -468,3 +601,12 @@ require'lspconfig'.lua_ls.setup {
 		Lua = {}
 	}
 }
+
+require'LazyDo'.setup({
+	title = " Test ",
+})
+
+require("oatmeal").setup({
+	backend = 'ollama',
+	model = 'llama3.2:latest',
+})

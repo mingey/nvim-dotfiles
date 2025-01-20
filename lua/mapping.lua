@@ -10,10 +10,15 @@ vim.keymap.set('i', '<Caps_Lock>', '<Esc>')
 vim.keymap.set('c', '<Caps_Lock>', '<Esc>')
 vim.keymap.set('v', '<Caps_Lock>', '<Esc>')
 -- F2 opens init.lua for editing
-vim.keymap.set('n', '<F2>', ':edit $MYVIMRC<cr>')
-vim.keymap.set('i', '<F2>', ':edit $MYVIMRC<cr>')
-vim.keymap.set('c', '<F2>', ':edit $MYVIMRC<cr>')
-vim.keymap.set('v', '<F2>', ':edit $MYVIMRC<cr>')
+vim.keymap.set('n', '<F2>', ':split $MYVIMRC<cr>')
+vim.keymap.set('i', '<F2>', ':split $MYVIMRC<cr>')
+vim.keymap.set('c', '<F2>', ':split $MYVIMRC<cr>')
+vim.keymap.set('v', '<F2>', ':split $MYVIMRC<cr>')
+-- F3 toggles LazyDo
+vim.keymap.set('n', '<F3>', ':LazyDoToggle<cr>')
+vim.keymap.set('i', '<F3>', ':LazyDoToggle<cr>')
+vim.keymap.set('c', '<F3>', ':LazyDoToggle<cr>')
+vim.keymap.set('v', '<F3>', ':LazyDoToggle<cr>')
 -- save and source current buffer
 vim.keymap.set('n', '<Leader>xs', ':w <Bar> so %<cr>')
 -- moving screenwise through wrapped text with arrow keys and Home/End
@@ -61,3 +66,5 @@ vim.keymap.set('i', '<CR>', 'v:lua._G.cr_action()', { expr = true })
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>tt', ':Telescope<CR>', { desc = 'Telescope main menu' })
+-- FzfLua shortcuts
+vim.keymap.set('n', '<leader>fz', ':FzfLua<CR>', { desc = 'FzfLua main menu' })
