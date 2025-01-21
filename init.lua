@@ -1,4 +1,4 @@
--- install and initialize mini.nvim
+-- mini.nvim
 local path_package = vim.fn.stdpath('data') .. '/site'
 local mini_path = path_package .. '/pack/deps/start/mini.nvim'
 if not vim.loop.fs_stat(mini_path) then
@@ -12,7 +12,7 @@ if not vim.loop.fs_stat(mini_path) then
 	vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
 
--- Set up 'mini.deps' (customize to your liking)
+-- mini.deps
 require('mini.deps').setup({
 	job = {
 		timeout = 120000,
@@ -24,14 +24,17 @@ require('mini.deps').setup({
 
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
--- Safely execute immediately
+-- COLORSCHEMES
+
+	vim.o.termguicolors = true
+
+-- Catppuccin
 
 now(function()
 	add({
 		source = 'catppuccin/nvim',
 		name = 'catppuccin'
 	})
-	vim.o.termguicolors = true
 end)
 
 require('catppuccin').setup({
@@ -47,12 +50,16 @@ require('catppuccin').setup({
 	}
 })
 
+-- Everblush
+
 now(function()
 	add({
 		source = 'Everblush/nvim',
 		name = 'everblush',
 	})
 end)
+
+-- Monokai
 
 now(function()
 	add({
@@ -65,9 +72,15 @@ require('monokai').setup { palette = require('monokai').pro }
 require('monokai').setup { palette = require('monokai').soda }
 require('monokai').setup { palette = require('monokai').ristretto }
 
+-- declare colorscheme
+
 now(function()
 	vim.cmd.colorscheme 'monokai'
 end)
+
+-- MINI.NVIM PLUGINS (and dependencies)
+
+-- mini.sessions
 
 now(function()
 	require('mini.sessions').setup({
@@ -75,6 +88,8 @@ now(function()
 		autowrite = false,
 	})
 end)
+
+-- ascii.nvim (for art in mini.starter buffer) and nui.nvim
 
 now(function()
 	add({
@@ -84,6 +99,8 @@ now(function()
 		},
 	})
 end)
+
+-- mini.starter
 
 now(function()
 	require('mini.starter').setup()
@@ -105,34 +122,50 @@ starter.setup({
 	silent = false,
 })
 
+-- mini.notify
+
 now(function()
 	require('mini.notify').setup()
 	vim.notify = require('mini.notify').make_notify()
 end)
 
+-- mini.icons
+
 now(function()
 	require('mini.icons').setup()
 end)
+
+-- mini.visits
 
 now(function()
 	require('mini.visits').setup()
 end)
 
+-- mini.git
+
 now(function()
 	require('mini.git').setup()
 end)
+
+-- mini.diff
 
 now(function()
 	require('mini.diff').setup()
 end)
 
+-- mini.tabline
+
 now(function()
 	require('mini.tabline').setup()
 end)
 
+-- mini.test
+
 now(function()
 	require('mini.test').setup()
 end)
+
+-- mini.statusline
 
 now(function()
 	require('mini.statusline').setup({})
@@ -143,16 +176,21 @@ hi MiniStatuslineModeNormal guifg=#8ccf7e guibg=#141b1e
 hi MiniStatuslineFilename guifg=#ffffbf guibg=#141b1e
 ]])
 
--- Safely execute later
+-- mini.ai
+
 later(function()
 	require('mini.ai').setup({
 		search_method = 'cover_or_nearest',
 	})
 end)
 
+-- mini.bufremove
+
 later(function()
-require('mini.bufremove').setup()
+	require('mini.bufremove').setup()
 end)
+
+-- mini.clue
 
 later(function()
 	local miniclue = require('mini.clue')
@@ -223,17 +261,29 @@ later(function()
 	})
 end)
 
+-- mini.extra
+
 later(function()
 	require('mini.extra').setup()
 end)
 
+-- mini.files
+
 later(function()
-	require('mini.files').setup()
+	require('mini.files').setup({
+		windows = {
+			preview = true,
+		}
+	})
 end)
+
+-- mini.comment
 
 later(function()
 	require('mini.comment').setup()
 end)
+
+-- mini.completion
 
 later(function()
 	require('mini.completion').setup({
@@ -268,6 +318,8 @@ later(function()
 	})
 end)
 
+-- mini.move
+
 later(function()
 	require('mini.move').setup({
 		mappings = {
@@ -283,13 +335,19 @@ later(function()
 	})
 end)
 
+-- mini.pairs
+
 later(function()
 	require('mini.pairs').setup()
 end)
 
+-- mini.pick
+
 later(function()
 	require('mini.pick').setup()
 end)
+
+-- mini.snippets
 
 later(function()
 	local gen_loader = require('mini.snippets').gen_loader
@@ -303,13 +361,18 @@ later(function()
 	})
 end)
 
+-- mini.surround
+
 later(function()
 	require('mini.surround').setup()
 end)
 
+-- OTHER PLUGINS
+
 now(function()
-	-- Use other plugins with `add()`. It ensures plugin is available in current
-	-- session (installs if absent)
+
+-- nvim-lspconfig, Mason, Mason-lspconfig
+
 	add({
 		source = 'neovim/nvim-lspconfig',
 		-- Supply dependencies near target plugin
@@ -319,25 +382,107 @@ now(function()
 		},
 	})
 
+	require('mason').setup()
+	require('mason-lspconfig').setup()
+	require'lspconfig'.lua_ls.setup({
+		settings = {
+			Lua = {
+				diagnostics = {
+					globals = {
+						'vim',
+						'MiniDeps',
+						'MiniStarter',
+					},
+				},
+			},
+		},
+	})
+	require'lspconfig'.clangd.setup({
+	})
+
+	require'lspconfig'.lua_ls.setup {
+		on_init = function(client)
+			if client.workspace_folders then
+				local path = client.workspace_folders[1].name
+				if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
+					return
+				end
+			end
+
+			client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+				runtime = {
+					-- Tell the language server which version of Lua you're using
+					-- (most likely LuaJIT in the case of Neovim)
+					version = 'LuaJIT'
+				},
+				-- Make the server aware of Neovim runtime files
+				workspace = {
+					checkThirdParty = false,
+					library = {
+						vim.env.VIMRUNTIME
+						-- Depending on the usage, you might want to add additional paths here.
+						-- "${3rd}/luv/library"
+						-- "${3rd}/busted/library",
+					}
+					-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
+					-- library = vim.api.nvim_get_runtime_file("", true)
+				}
+			})
+		end,
+		settings = {
+			Lua = {}
+		}
+	}
+
+-- friendly-snippets
+
 	add({
 		source = 'rafamadriz/friendly-snippets',
 	})
+
+-- VimWiki
 
 	add({
 		source = 'vimwiki/vimwiki',
 	})
 
+	vim.g.vimwiki_global_ext = 0
+	vim.cmd([[
+		let g:vimwiki_key_mappings =
+		\{
+		\	'all_maps': 1,
+		\	'global': 1,
+		\	'headers': 1,
+		\	'text_objs': 1,
+		\	'table_format': 1,
+		\	'table_mappings': 1,
+		\	'lists': 1,
+		\	'links': 1,
+		\	'html': 1,
+		\	'mouse': 1,
+		\}
+	hi VimwikiItalic guifg=#F88379 gui=italic
+	]])
+
+-- helpview
+
 	add({
 		source = 'OXY2DEV/helpview.nvim',
 	})
+
+-- coop.nvim
 
 	add({
 		source = 'gregorias/coop.nvim',
 	})
 
+-- pathlib.nvim
+
 	add({
 		source = 'pysan3/pathlib.nvim',
 })
+
+-- Telescope & plenary.nvim
 
 	add({
 		source = 'nvim-telescope/telescope.nvim',
@@ -346,14 +491,29 @@ now(function()
 		},
 	})
 
+-- LazyDo
+
 	add({
 		source = 'Dan7h3x/LazyDo',
 		checkout = 'main',
 	})
 
+	require'LazyDo'.setup({
+		title = " ToDo ",
+	})
+
+-- Oatmeal
+
 	add({
 		source = 'dustinblackman/oatmeal.nvim',
 	})
+
+	require("oatmeal").setup({
+		backend = 'ollama',
+		model = 'llama3.2:latest',
+	})
+
+-- fzf-lua & nvim-web-devicons
 
 	add({
 		source = 'ibhagwan/fzf-lua',
@@ -362,13 +522,26 @@ now(function()
 		},
 	})
 
+-- lush
+
 	add({
 		source = 'rktjmp/lush.nvim',
 	})
 
+-- mpv.nvim
+
+	add({
+		source = 'tamton-aquib/mpv.nvim',
+	})
+
+	require'mpv'.setup()
+
 end)
 
 later(function()
+
+-- Treesitter
+
 	add ({
 		source = 'nvim-treesitter/nvim-treesitter',
 		-- Use 'master' while monitoring updates in 'main'
@@ -378,16 +551,18 @@ later(function()
 		hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
 	})
 
-	-- Possible to immediately execute code which depends on the added plugin
 	require('nvim-treesitter.configs').setup({
 		ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'xml' },
 		highlight = { enable = true },
 	})
 end)
 
+-- KEYMAPS
+
 require('mapping')
 
--- OPTIONS
+-- VIM OPTIONS
+
 -- file navigation & handling
 vim.opt.autochdir = false
 
@@ -402,6 +577,7 @@ vim.opt.cmdheight = 4
 vim.opt.guicursor = { 'n-v-c:block', 'i-ci-ve:ver25', 'r-cr:hor20', 'o:hor50', 'a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor', 'sm:block-blinkwait175-blinkoff150-blinkon175' }
 vim.opt.list = true
 vim.opt_global.listchars = 'tab:> ,trail:-,nbsp:+,extends:&,precedes:&'
+vim.opt.pumblend = 10
 
 -- wrapping and indentation
 vim.cmd [[filetype plugin indent on]]
@@ -435,7 +611,7 @@ vim.opt.hidden = true					-- required for LSP
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.scrolloff = 5
-vim.opt.sidescrolloff = 15
+vim.opt.sidescrolloff = 10
 
 -- editing
 vim.opt.formatoptions = 'tcqwnjc'
@@ -445,6 +621,7 @@ vim.opt.paste = false
 vim.opt.hlsearch = true
 vim.opt.inccommand = 'split'
 vim.opt.ignorecase = true
+vim.opt.infercase = true
 vim.opt.smartcase = true
 
 -- completion
@@ -466,7 +643,7 @@ vim.opt.ttimeoutlen = 50
 -- set colorscheme
 vim.opt.background = 'dark'
 
--- Neovide
+-- NEOVIDE OPTIONS
 if vim.g.neovide then
   vim.opt.linespace = 0.2
   vim.g.neovide_scale_factor = 1.0
@@ -524,89 +701,7 @@ if vim.g.neovide then
 	end)
 end
 
--- languages
+-- LANGUAGES
 vim.g.perl_host_prog='C:\\Users\\brobe\\scoop\\apps\\perl\\current\\perl\\bin\\perl.exe'
 vim.g.node_host_prog='C:\\Users\\brobe\\node_modules\\neovim\\bin\\cli.exe'
 vim.g.python3_host_prog='C:\\Users\\brobe\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
-
--- VimWiki
-vim.g.vimwiki_global_ext = 0
-vim.cmd([[
-	let g:vimwiki_key_mappings =
-	\{
-	\	'all_maps': 1,
-	\	'global': 1,
-	\	'headers': 1,
-	\	'text_objs': 1,
-	\	'table_format': 1,
-	\	'table_mappings': 1,
-	\	'lists': 1,
-	\	'links': 1,
-	\	'html': 1,
-	\	'mouse': 1,
-	\}
-hi VimwikiItalic guifg=#F88379 gui=italic
-]])
-
--- PLUGINS
-
-require('mason').setup()
-require('mason-lspconfig').setup()
-require'lspconfig'.lua_ls.setup({
-	settings = {
-		Lua = {
-			diagnostics = {
-				globals = {
-					'vim',
-					'MiniDeps',
-					'MiniStarter',
-				},
-			},
-		},
-	},
-})
-require'lspconfig'.clangd.setup({
-})
-
-require'lspconfig'.lua_ls.setup {
-	on_init = function(client)
-		if client.workspace_folders then
-			local path = client.workspace_folders[1].name
-			if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
-				return
-			end
-		end
-
-		client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-			runtime = {
-				-- Tell the language server which version of Lua you're using
-				-- (most likely LuaJIT in the case of Neovim)
-				version = 'LuaJIT'
-			},
-			-- Make the server aware of Neovim runtime files
-			workspace = {
-				checkThirdParty = false,
-				library = {
-					vim.env.VIMRUNTIME
-					-- Depending on the usage, you might want to add additional paths here.
-					-- "${3rd}/luv/library"
-					-- "${3rd}/busted/library",
-				}
-				-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
-				-- library = vim.api.nvim_get_runtime_file("", true)
-			}
-		})
-	end,
-	settings = {
-		Lua = {}
-	}
-}
-
-require'LazyDo'.setup({
-	title = " Test ",
-})
-
-require("oatmeal").setup({
-	backend = 'ollama',
-	model = 'llama3.2:latest',
-})
