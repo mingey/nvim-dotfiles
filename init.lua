@@ -15,11 +15,15 @@ end
 -- mini.deps
 require('mini.deps').setup({
 	job = {
+		n_threads = nil,
 		timeout = 120000,
 	},
 	path = {
 		package = path_package,
+		snapshot = vim.fn.stdpath('config') .. '/mini-deps-snap',
+		log = vim.fn.stdpath('config') .. '/mini-deps.log',
 	},
+	silent = false,
 })
 
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
@@ -39,7 +43,7 @@ end)
 
 require('catppuccin').setup({
 	flavour = 'mocha',
-	transparent_background = false,
+	transparent_background = true,
 	dim_inactive = {
 		enabled = false,
 		shade = 'dark',
@@ -124,8 +128,18 @@ starter.setup({
 
 -- mini.notify
 
+local win_config = function() -- displays notifications in bottom right corner
+	local has_statusline = vim.o.laststatus > 0
+	local pad = vim.o.cmdheight + (has_statusline and 1 or 0)
+	return { anchor = 'SE', col = vim.o.columns, row = vim.o.lines - pad }
+end
+
 now(function()
-	require('mini.notify').setup()
+	require('mini.notify').setup({
+		window = {
+			config = win_config
+		}
+	})
 	vim.notify = require('mini.notify').make_notify()
 end)
 
@@ -273,7 +287,10 @@ later(function()
 	require('mini.files').setup({
 		windows = {
 			preview = true,
-		}
+		},
+		options = {
+			use_as_default_explorer = false,
+		},
 	})
 end)
 
