@@ -43,7 +43,7 @@ end)
 
 require('catppuccin').setup({
 	flavour = 'mocha',
-	transparent_background = true,
+	transparent_background = false,
 	dim_inactive = {
 		enabled = false,
 		shade = 'dark',
@@ -76,10 +76,18 @@ require('monokai').setup { palette = require('monokai').pro }
 require('monokai').setup { palette = require('monokai').soda }
 require('monokai').setup { palette = require('monokai').ristretto }
 
+-- tokyonight.nvim
+
+now(function()
+	add({
+		source = 'folke/tokyonight.nvim',
+	})
+end)
+
 -- declare colorscheme
 
 now(function()
-	vim.cmd.colorscheme 'monokai'
+	vim.cmd.colorscheme 'tokyonight'
 end)
 
 -- MINI.NVIM PLUGINS (and dependencies)
@@ -146,7 +154,9 @@ end)
 -- mini.icons
 
 now(function()
-	require('mini.icons').setup()
+	require('mini.icons').setup({
+		style = 'glyph',
+	})
 end)
 
 -- mini.visits
@@ -198,6 +208,14 @@ later(function()
 	})
 end)
 
+later(function()
+	require('mini.bracketed').setup({})
+end)
+
+later(function()
+	require('mini.align').setup({})
+end)
+
 -- mini.bufremove
 
 later(function()
@@ -241,6 +259,12 @@ later(function()
 			-- 'z' key
 			{ mode = 'n', keys = 'z' },
 			{ mode = 'x', keys = 'z' },
+
+			-- `[` and `]' keys
+			{ mode = 'n', keys = '[' },
+			{ mode = 'x', keys = '[' },
+			{ mode = 'n', keys = ']' },
+			{ mode = 'x', keys = ']' },
 		},
 
 		clues = {
@@ -333,6 +357,24 @@ later(function()
 		},
 		set_vim_settings = true,
 	})
+end)
+
+-- mini.jump
+
+later(function()
+	require('mini.jump').setup()
+end)
+
+-- mini.jump2d
+
+later(function()
+	require('mini.jump2d').setup()
+end)
+
+-- mini.misc
+
+later(function()
+	require('mini.misc').setup()
 end)
 
 -- mini.move
@@ -436,10 +478,11 @@ now(function()
 				workspace = {
 					checkThirdParty = false,
 					library = {
-						vim.env.VIMRUNTIME
+						-- vim.env.VIMRUNTIME,
 						-- Depending on the usage, you might want to add additional paths here.
-						-- "${3rd}/luv/library"
+						"${3rd}/luv/library",
 						-- "${3rd}/busted/library",
+						unpack(vim.api.nvim_get_runtime_file('', true)),
 					}
 					-- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
 					-- library = vim.api.nvim_get_runtime_file("", true)
@@ -499,14 +542,50 @@ now(function()
 		source = 'pysan3/pathlib.nvim',
 })
 
--- Telescope & plenary.nvim
+-- Telescope & plenary.nvim & telescope-fzf-native
+
+	local function make_fzf_native(params)
+		vim.notify("Building fzf native extension", vim.log.levels.INFO)
+		vim.cmd("lcd " .. params.path)
+		vim.cmd("!make -s")
+		vim.cmd("lcd -")
+	end
 
 	add({
 		source = 'nvim-telescope/telescope.nvim',
 		depends = {
 			'nvim-lua/plenary.nvim',
+			{
+				source = 'nvim-telescope/telescope-fzf-native.nvim',
+				hooks = {
+					post_checkout = make_fzf_native,
+					post_install = make_fzf_native,
+				}
+			},
+			'nvim-telescope/telescope-symbols.nvim',
 		},
 	})
+
+	require('telescope').setup {
+		defaults = {
+			mappings = {
+				i = {
+					['<C-h>'] = 'which_key'
+				}
+			}
+		},
+		pickers = {},
+		extensions = {
+			fzf = {
+				fuzzy = true,
+				override_generic_sorter = true,
+				override_file_sorter = true,
+				case_mode = 'smart_case',
+			}
+		}
+	}
+
+	require('telescope').load_extension('fzf')
 
 -- LazyDo
 
@@ -568,10 +647,91 @@ later(function()
 		hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
 	})
 
-	require('nvim-treesitter.configs').setup({
+	require('nvim-treesitter.configs').setup {
 		ensure_installed = { 'c', 'lua', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'xml' },
 		highlight = { enable = true },
+		indent = { enable = true },
+		auto_install = true,
+	}
+
+-- neovimcraft
+
+	add({
+		source = 'janwvjaarsveld/neovimcraft.nvim',
+		depends = {
+			'nvim-telescope/telescope.nvim',
+			'nvim-lua/plenary.nvim',
+		},
 	})
+
+	require('neovimcraft').setup()
+
+-- vim-floaterm
+
+	add({
+		source = 'voldikss/vim-floaterm',
+	})
+
+	vim.cmd([[
+		hi Floaterm guibg = black
+	]])
+
+-- cheatsheet.nvim
+
+	add({
+		source = 'sudormrfbin/cheatsheet.nvim',
+	})
+
+-- undotree
+	add({
+		source = 'mbbill/undotree',
+	})
+
+-- tiny-inline-diagnostic.nvim
+
+	add({
+		source = 'rachartier/tiny-inline-diagnostic.nvim',
+	})
+
+	require('tiny-inline-diagnostic').setup({
+		preset = 'modern', -- modern, classic, minimal, powerline, ghost, simple, nonerdfont, amongus
+		transparent_bg = false,
+		hi = {},
+		options = {
+			show_source = true,
+			use_icons_from_diagnostic = false,
+			add_messages = true,
+			throttle = 20,
+			softwrap = 30,
+			multilines = {
+				enabled = false,
+				always_show = false,
+			},
+			show_all_diags_on_cursorline = false,
+			enable_on_insert = false,
+			enable_on_select = false,
+			overflow = {
+				mode = 'wrap' -- wrap, none, oneline
+			},
+			break_line = {
+				enabled = false,
+				after = 30,
+			},
+			format = nil,
+			virt_texts = {
+				priority = 2048,
+			},
+			severity = {
+				vim.diagnostic.severity.ERROR,
+				vim.diagnostic.severity.WARN,
+				vim.diagnostic.severity.INFO,
+				vim.diagnostic.severity.HINT,
+			},
+			overwrite_events = nil,
+		},
+		disabled_ft = {},
+	})
+
 end)
 
 -- KEYMAPS
@@ -689,7 +849,7 @@ if vim.g.neovide then
   vim.g.neovide_confirm_quit = true
   vim.g.neovide_detach_on_quit = 'prompt'
   vim.g.neovide_fullscreen = true
-vim.g.neovide_remember_window_size = true
+	vim.g.neovide_remember_window_size = true
   vim.g.neovide_profiler = false
   vim.g.neovide_cursor_animation_length = 0.05
   vim.g.neovide_cursor_trail_size = 1.5
@@ -700,7 +860,7 @@ vim.g.neovide_remember_window_size = true
   vim.g.neovide_cursor_smooth_blink = true
   vim.g.neovide_cursor_vfx_mode = 'pixiedust'
   vim.g.neovide_cursor_vfx_opacity = 200.0
-vim.g.neovide_cursor_vfx_particle_lifetime = 2.0
+	vim.g.neovide_cursor_vfx_particle_lifetime = 2.0
   vim.g.neovide_cursor_vfx_particle_density = 7.0
   vim.g.neovide_cursor_vfx_particle_speed = 10.0
 end

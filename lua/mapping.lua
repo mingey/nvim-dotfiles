@@ -24,6 +24,12 @@ vim.keymap.set('i', '<F3>', ':LazyDoToggle<cr>')
 vim.keymap.set('c', '<F3>', ':LazyDoToggle<cr>')
 vim.keymap.set('v', '<F3>', ':LazyDoToggle<cr>')
 
+-- F4 toggles Floaterm
+vim.keymap.set('n', '<F4>', ':FloatermToggle<cr>')
+vim.keymap.set('i', '<F4>', ':FloatermToggle<cr>')
+vim.keymap.set('c', '<F4>', ':FloatermToggle<cr>')
+vim.keymap.set('v', '<F4>', ':FloatermToggle<cr>')
+
 -- save and source current buffer
 vim.keymap.set('n', '<Leader>xs', ':w <Bar> so %<cr>', { desc = 'Save and source buffer'})
 
@@ -75,11 +81,50 @@ vim.keymap.set('i', '<CR>', 'v:lua._G.cr_action()', { expr = true })
 -- Telescope shortcuts
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>tt', ':Telescope<CR>', { desc = 'Telescope main menu' })
-vim.keymap.set('n', '<leader>tc', builtin.colorscheme, { desc = 'Telescope colorschemes' })
+vim.keymap.set('n', '<leader>t<Space>', builtin.resume, { desc = 'Telescope resume' })
+vim.keymap.set('n', '<leader>ta', builtin.autocommands, { desc = 'Telescope autocommands' })
+vim.keymap.set('n', '<leader>tb', builtin.buffers, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>tch', builtin.command_history, { desc = 'Telescope command history' })
+vim.keymap.set('n', '<leader>tcm', builtin.commands, { desc = 'Telescope commands' })
+vim.keymap.set('n', '<leader>tco', builtin.colorscheme, { desc = 'Telescope colorschemes' })
+vim.keymap.set('n', '<leader>tcta', builtin.tags, { desc = 'Telescope tags' })
+vim.keymap.set('n', '<leader>tctb', builtin.current_buffer_tags, { desc = 'Telescope current buffer tags' })
 vim.keymap.set('n', '<leader>td', builtin.diagnostics, { desc = 'Telescope diagnostics' })
-vim.keymap.set('n', '<leader>tf', builtin.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>th', builtin.help_tags, { desc = 'Telescope help_tags' })
+vim.keymap.set('n', '<leader>tff', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>tft', builtin.filetypes, { desc = 'Telescope filetypes' })
+vim.keymap.set('n', '<leader>tgf', builtin.git_files, { desc = 'Telescope git files' })
+vim.keymap.set('n', '<leader>tgs', builtin.grep_string, { desc = 'Telescope grep string' })
+vim.keymap.set('n', '<leader>the', builtin.help_tags, { desc = 'Telescope help tags' })
+vim.keymap.set('n', '<leader>thi', builtin.highlights, { desc = 'Telescope highlights' })
+vim.keymap.set('n', '<leader>tj', builtin.jumplist, { desc = 'Telescope jumplist' })
 vim.keymap.set('n', '<leader>tk', builtin.keymaps, { desc = 'Telescope keymaps' })
+vim.keymap.set('n', '<leader>tlg', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>tll', builtin.loclist, { desc = 'Telescope location list' })
+vim.keymap.set('n', '<leader>tm', builtin.marks, { desc = 'Telescope marks' })
+vim.keymap.set('n', '<leader>to', builtin.oldfiles, { desc = 'Telescope oldfiles' })
+vim.keymap.set('n', '<leader>tpi', builtin.pickers, { desc = 'Telescope pickers' })
+vim.keymap.set('n', '<leader>tqf', builtin.quickfix, { desc = 'Telescope quickfix' })
+vim.keymap.set('n', '<leader>tqh', builtin.quickfixhistory, { desc = 'Telescope quickfix history' })
+vim.keymap.set('n', '<leader>tr', builtin.registers, { desc = 'Telescope registers' })
+vim.keymap.set('n', '<leader>tsh', builtin.search_history, { desc = 'Telescope search history' })
+vim.keymap.set('n', '<leader>tsp', builtin.spell_suggest, { desc = 'Telescope spell suggest' })
+vim.keymap.set('n', '<leader>tsy', builtin.symbols, { desc = 'Telescope symbols' })
+vim.keymap.set('n', '<leader>tv', builtin.vim_options, { desc = 'Telescope vim options' })
+
+vim.keymap.set('n', '<leader>tn', function()
+	builtin.find_files { cwd = vim.fn.stdpath 'config' }
+end, { desc = 'Telescope find in Neovim directory' })
+
+vim.keymap.set('n', '<leader>tpl', function()
+	builtin.find_files { cwd = vim.fn.stdpath 'data' }
+end, { desc = 'Telescope find in Neovim data directory' })
+
+vim.keymap.set('n', '<leader>t/', function()
+	builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+		winblend = 10,
+		previewer = false,
+	})
+end, { desc = 'Fuzzily search in current buffer' })
 
 -- FzfLua shortcuts
 vim.keymap.set('n', '<leader>ff', ':FzfLua<CR>', { desc = 'FzfLua main menu' })
@@ -161,4 +206,14 @@ vim.api.nvim_create_autocmd('User', {
 	end,
 })
 
+-- Open VimWiki link in split
+vim.keymap.set('n', '<Leader><Space>', ':VimwikiSplitLink<CR>', { desc = 'Open VimWiki link in split' })
 
+-- Save current mini.sessions session
+vim.keymap.set('n', '<Leader>ss', function()
+	MiniSessions.write()
+end, { desc = 'Save current mini session' })
+
+-- Search word under cursor with Google
+vim.keymap.set('n', '<leader>g', 'y:!s -p google <cword><CR>', { desc = 'Google word under cursor' })
+vim.keymap.set('v', '<leader>g', 'y:!s -p google <C-R>0<CR>', { desc = 'Google visual selection' })

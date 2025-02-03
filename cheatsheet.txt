@@ -1,0 +1,140 @@
+# CHEATSHEET FORMAT: 
+# starts normal comment; double # starts metadata comment for specifying sections and tags
+
+## custom-keymaps @custom @my-keymaps
+
+Enter command mode | <Space>
+Esc | <Caps_Lock>
+Open init.lua in split | <F2>
+Save and source current buffer | <Leader>xs
+Shuffle the lines of a file | <Leader>r
+Google word under cursor or visual selection | <Leader>g
+
+## Specific-Vim-Commands @vim
+
+Select paragraph | vip
+
+## LazyDo
+
+Toggle LazyDo | <F3>
+
+## Floaterm
+
+Toggle Floaterm window | <F4>
+
+## TelescopeShortcuts @telescope
+
+Telescope main menu | <Leader>tt
+Telescope autocommands | <Leader>ta
+Telescope buffers | <Leader>tb
+Telescope command history | <Leader>tch
+Telescope commands | <Leader>tcm
+Telescope colorschemes | <Leader>tco
+Telescope tags | <Leader>tcta
+Telescope current buffer tags | <Leader>tctb
+Telescope diagnostics | <Leader>td
+Telescope find files | <Leader>tff
+Telescope filetypes | <Leader>tft
+Telescope git files | <Leader>tgf
+Telescope grep string | <Leader>tgs
+Telescope help tags | <Leader>the
+Telescope highlights | <Leader>thi
+Telescope jumplist | <Leader>tj
+Telescope keymaps | <Leader>tk
+Telescope live grep | <Leader>tlg
+Telescope location list | <Leader>tll
+Telescope marks | <Leader>tm
+Telescope find files in Neovim directory | <Leader>tn
+Telescope oldfiles | <Leader>to
+Telescope pickers | <Leader>tpi
+Telescope find files in Neovim data directory | <Leader>tpl
+Telescope quickfix | <Leader>tqf
+Telescope registers | <Leader>tr
+Telescope resume | <Leader>t<Space>
+Telescope search history | <Leader>tsh
+Telescope spell suggest | <Leader>tsp
+Telescope symbols | <Leader>tsy
+Telescope vim options | <Leader>tv
+Telescope current buffer fuzzy find | <Leader>t/
+
+## TelescopeCommands @telescope
+
+See keymaps in Telescope picker | <C-h>
+Go to file selection as split | <C-x>
+Go to file selection as vsplit | <C-v>
+Go to file in new tab | <C-t>
+Toggle selection and move to next selection | <Tab>
+Toggle selection and move to prev selection | <S-Tab>
+Send all selected items to qflist | <M-q>
+Send all items not filtered to qflist | <C-q>
+Insert cword in original window into prompt | <C-r><C-w>
+Insert cWORD in original window into prompt | <C-r><C-a>
+Insert cfile in original window into prompt | <C-r><C-f>
+Insert cline in original window into prompt | <C-r><C-l>
+
+## FzfLua
+
+FzfLua main menu | <Leader>ff
+FzfLua awesome_colorschemes | <Leader>fa
+FzfLua colorschemes | <Leader>fc
+FzfLua diagnostics_document | <Leader>fd
+FzfLua files | <Leader>fi
+FzfLua helptags | <Leader>fh
+FzfLua keymaps | <Leader>fk
+
+## mini.files @mini
+
+Open MiniFiles in current file's directory (global) | -
+Open MiniFiles in cwd (global) | _
+Open MiniFiles selection in split below | <C-s>
+Open MiniFiles selection in split right | <C-v>
+Set MiniFiles selection as cwd | g~
+Yank path of MiniFiles selection | gy
+
+## mini.bracketed @ mini
+
+Go to previous buffer | [b
+Go to next buffer | ]b
+Go to previous comment block | [c
+Go to next comment block | ]c
+Go to previous conflict marker | [x
+Go to next conflict marker | ]x
+Go to previous diagnostic | [d
+Go to next diagnostic | ]d
+Go to previous file on disk | [f
+Go to next file on disk | ]f
+Go to previous indent change | [i
+Go to next indent change | ]i
+Go to previous jump from jumplist inside current buffer | [j
+Go to next jump from jumplist inside current buffer | ]j
+Go to previous location from location list | [l
+Go to next location from location list | ]l
+Go to previous old file | [o
+Go to next old file | ]o
+Go to previous quickfix entry from quickfix list | [q
+Go to next quickfix entry from quickfix list | ]q
+Go to previous tree-sitter node and parents | [t
+Go to next tree-sitter node and parents | ]t
+Go to previous undo state from specially tracked linear history | [u
+Go to next undo state from specially tracked linear history | ]u
+Go to previous window in current tab | [w
+Go to next window in current tab | ]w
+Go to previous yank selection replacing latest put region | [y
+Go to next yank selection replacing latest put region | ]y
+
+## mini.bufremove @mini
+
+Delete current buffer | :lua MiniBufRemove.delete()
+Unshow current buffer in window | :lua MiniBufRemove.unshow_in_window()
+
+## mini.jump2d @mini
+
+Show jump targets | <Enter>
+
+## VimWiki
+
+Open link in split | <Leader><Space>
+
+## mini.sessions @mini
+
+Save current mini session | <Leader>ss
