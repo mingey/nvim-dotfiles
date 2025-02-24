@@ -217,3 +217,13 @@ end, { desc = 'Save current mini session' })
 -- Search word under cursor with Google
 vim.keymap.set('n', '<leader>g', 'y:!s -p google <cword><CR>', { desc = 'Google word under cursor' })
 vim.keymap.set('v', '<leader>g', 'y:!s -p google <C-R>0<CR>', { desc = 'Google visual selection' })
+
+-- Search word under cursor in Wikipedia
+vim.keymap.set('n', '<leader>wp', 'y:!s -p wikipedia <cword><CR>', { desc = 'Search word under cursor in Wikipedia' })
+vim.keymap.set('v', '<leader>wp', 'y:!s -p wikipedia <C-R>0<CR>', { desc = 'Search visual selection in Wikipedia' })
+
+-- Use mini.bufremove to wipeout buffer without closing pane
+vim.keymap.set('n', '<Leader>bw', ':lua MiniBufremove.wipeout()<CR>', { desc = 'Wipeout buffer without closing pane'})
+
+-- Open Python repl in floating terminal
+vim.keymap.set('n', '<leader>p', ':FloatermNew python<CR>', { desc = 'Open Python in floating terminal window' })

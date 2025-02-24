@@ -49,5 +49,10 @@
         "prefix": "uuid",
         "body": "${UUID}",
         "description": "A Version 4 UUID"
+    },
+    "ThinkPythonExample": {
+        "prefix": "Example program at",
+        "body": "Example program at C:\\Users\\brobe\\ThinkPython\\",
+        "description": "Points to example program for Think Python"
     }
 }

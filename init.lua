@@ -84,11 +84,32 @@ now(function()
 	})
 end)
 
--- declare colorscheme
+-- neko-night
 
 now(function()
-	vim.cmd.colorscheme 'tokyonight'
+	add({
+		source = 'neko-night/nvim',
+		name = 'nekonight'
+	})
 end)
+
+require('nekonight').setup()
+
+-- starry
+
+now(function()
+	add({
+		source = 'ray-x/starry.nvim',
+	})
+end)
+
+require('starry').setup({})
+
+-- declare colorscheme
+
+vim.cmd([[
+	:colorscheme nekonight-moonlight
+]])
 
 -- MINI.NVIM PLUGINS (and dependencies)
 
@@ -456,7 +477,11 @@ now(function()
 			},
 		},
 	})
+
 	require'lspconfig'.clangd.setup({
+	})
+
+	require'lspconfig'.pylsp.setup({
 	})
 
 	require'lspconfig'.lua_ls.setup {
@@ -522,6 +547,10 @@ now(function()
 		\	'mouse': 1,
 		\}
 	hi VimwikiItalic guifg=#F88379 gui=italic
+	let wiki = {}
+	let wiki.path = '~/vimwiki/'
+	let wiki.nested_syntaxes = {'c': 'c', 'org': 'org'}
+	let g:vimwiki_list = [wiki]
 	]])
 
 -- helpview
@@ -695,20 +724,20 @@ later(function()
 
 	require('tiny-inline-diagnostic').setup({
 		preset = 'modern', -- modern, classic, minimal, powerline, ghost, simple, nonerdfont, amongus
-		transparent_bg = false,
+		transparent_bg = true,
 		hi = {},
 		options = {
 			show_source = true,
 			use_icons_from_diagnostic = false,
 			add_messages = true,
-			throttle = 20,
+			throttle = 0,
 			softwrap = 30,
 			multilines = {
-				enabled = false,
+				enabled = true,
 				always_show = false,
 			},
 			show_all_diags_on_cursorline = false,
-			enable_on_insert = false,
+			enable_on_insert = true,
 			enable_on_select = false,
 			overflow = {
 				mode = 'wrap' -- wrap, none, oneline

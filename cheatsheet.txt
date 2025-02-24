@@ -9,6 +9,8 @@ Open init.lua in split | <F2>
 Save and source current buffer | <Leader>xs
 Shuffle the lines of a file | <Leader>r
 Google word under cursor or visual selection | <Leader>g
+Search Wikipedia for word under cursor or visual selection | <Leader>wp
+Open Python in floating terminal window | <Leader>p
 
 ## Specific-Vim-Commands @vim
 
@@ -126,6 +128,7 @@ Go to next yank selection replacing latest put region | ]y
 
 Delete current buffer | :lua MiniBufRemove.delete()
 Unshow current buffer in window | :lua MiniBufRemove.unshow_in_window()
+Wipeout buffer without closing pane | <Leader>bw
 
 ## mini.jump2d @mini
 
