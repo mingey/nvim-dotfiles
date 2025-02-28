@@ -8,9 +8,10 @@ Esc | <Caps_Lock>
 Open init.lua in split | <F2>
 Save and source current buffer | <Leader>xs
 Shuffle the lines of a file | <Leader>r
-Google word under cursor or visual selection | <Leader>g
-Search Wikipedia for word under cursor or visual selection | <Leader>wp
+Google word under cursor or visual selection | <Leader>sg
+Search Wikipedia for word under cursor or visual selection | <Leader>sw
 Open Python in floating terminal window | <Leader>p
+Open file under cursor in split, creating if necessary | <Leader>gf
 
 ## Specific-Vim-Commands @vim
 

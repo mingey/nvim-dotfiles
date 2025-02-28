@@ -51,8 +51,13 @@
         "description": "A Version 4 UUID"
     },
     "ThinkPythonExample": {
-        "prefix": "Example program at",
+        "prefix": "think",
         "body": "Example program at C:\\Users\\brobe\\ThinkPython\\",
         "description": "Points to example program for Think Python"
+    },
+    "lpthwExample": {
+        "prefix": "learn",
+        "body": "Example program at C:\\Users\\brobe\\lpthw\\",
+        "description": "Points to example program for Learn Python the Hard Way"
     }
 }
