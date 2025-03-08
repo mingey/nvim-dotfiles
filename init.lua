@@ -597,6 +597,7 @@ now(function()
 
 	require('telescope').setup {
 		defaults = {
+			wrap_results = true,
 			mappings = {
 				i = {
 					['<C-h>'] = 'which_key'
@@ -714,51 +715,6 @@ later(function()
 -- undotree
 	add({
 		source = 'mbbill/undotree',
-	})
-
--- tiny-inline-diagnostic.nvim
-
-	add({
-		source = 'rachartier/tiny-inline-diagnostic.nvim',
-	})
-
-	require('tiny-inline-diagnostic').setup({
-		preset = 'modern', -- modern, classic, minimal, powerline, ghost, simple, nonerdfont, amongus
-		transparent_bg = true,
-		hi = {},
-		options = {
-			show_source = true,
-			use_icons_from_diagnostic = false,
-			add_messages = true,
-			throttle = 0,
-			softwrap = 30,
-			multilines = {
-				enabled = true,
-				always_show = false,
-			},
-			show_all_diags_on_cursorline = false,
-			enable_on_insert = true,
-			enable_on_select = false,
-			overflow = {
-				mode = 'wrap' -- wrap, none, oneline
-			},
-			break_line = {
-				enabled = false,
-				after = 30,
-			},
-			format = nil,
-			virt_texts = {
-				priority = 2048,
-			},
-			severity = {
-				vim.diagnostic.severity.ERROR,
-				vim.diagnostic.severity.WARN,
-				vim.diagnostic.severity.INFO,
-				vim.diagnostic.severity.HINT,
-			},
-			overwrite_events = nil,
-		},
-		disabled_ft = {},
 	})
 
 end)

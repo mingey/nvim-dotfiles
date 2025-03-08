@@ -138,6 +138,9 @@ Show jump targets | <Enter>
 ## VimWiki
 
 Open link in split | <Leader><Space>
+Increase the level of a list item (Insert Mode) | <C-T>
+Decrease the level of a list item (Insert Mode) | <C-D>
+Change the symbol of the current list item (Insert Mode) | <C-L><C-J>
 
 ## mini.sessions @mini
 
